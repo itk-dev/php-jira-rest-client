@@ -224,6 +224,14 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
+     * @return string|null
+     */
+    public function getAuthorizationHeader($context)
+    {
+        return null;
+    }
+
+    /**
      * @return string
      */
     public function isCookieAuthorizationEnabled()

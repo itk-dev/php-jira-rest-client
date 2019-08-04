@@ -213,7 +213,12 @@ class JiraClient
             }
         }
 
-        $this->authorization($ch, $cookieFile);
+        $headers = ['Accept: */*', 'Content-Type: application/json', 'X-Atlassian-Token: no-check'];
+        if (null !== $this->getConfiguration()->getAuthorizationHeader($context)) {
+            $headers[] = 'authorization: '.$this->getConfiguration()->getAuthorizationHeader($context);
+        } else {
+            $this->authorization($ch, $cookieFile);
+        }
 
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $this->getConfiguration()->isCurlOptSslVerifyHost());
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->getConfiguration()->isCurlOptSslVerifyPeer());
@@ -225,8 +230,8 @@ class JiraClient
         }
 
         curl_setopt($ch, CURLOPT_ENCODING, '');
-        curl_setopt($ch, CURLOPT_HTTPHEADER,
-            ['Accept: */*', 'Content-Type: application/json', 'X-Atlassian-Token: no-check']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
 
         curl_setopt($ch, CURLOPT_VERBOSE, $this->getConfiguration()->isCurlOptVerbose());
 
